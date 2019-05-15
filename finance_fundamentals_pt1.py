@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 start = pd.to_datetime('2012-01-01')
 end = pd.to_datetime('2017-01-01')
 
+quandl.ApiConfig.api_key = "zBYuKnB1jL7x6nykV_28"
 aapl = quandl.get('WIKI/AAPL.11', start_date=start, end_date=end)
 cisco = quandl.get('WIKI/CSCO.11', start_date=start, end_date=end)
 ibm = quandl.get('WIKI/IBM.11', start_date=start, end_date=end)
@@ -52,3 +53,28 @@ plt.show()
 portfolio_val.drop('Total Pos', axis=1).plot()
 plt.title('Portfolio Share')
 plt.show()
+
+portfolio_val['Daily Return'] = portfolio_val['Total Pos'].pct_change(1)
+print ('\n Mean Daily Return:')
+print (portfolio_val['Daily Return'].mean())
+
+print ('\n Standard deviation:')
+print (portfolio_val['Daily Return'].std())
+
+portfolio_val['Daily Return'].plot(kind='hist', bins=100)
+plt.show()
+portfolio_val['Daily Return'].plot(kind='kde')
+plt.show()
+
+cumulative_return = 100*(portfolio_val['Total Pos'][-1]/portfolio_val['Total Pos'][0] - 1)
+print ('\n Cumulative Return:')
+print (cumulative_return)
+
+# Sharpie Ration
+SR = portfolio_val['Daily Return'].mean()/portfolio_val['Daily Return'].std()
+print ('\n Sharpie Ration:')
+print (SR)
+
+print ('\n Anual Sharpie Ration:')
+ASR = (252**0.5)*SR
+print (ASR)
